@@ -26,7 +26,7 @@ export default {
 		});
 
 		try {
-			const payload = await request.text();
+			const payload = await request.json();
 
 			console.log(payload);
 
@@ -47,7 +47,7 @@ export default {
 				workflow_id: env.WORKFLOW_ID,
 				ref: 'main',
 				inputs: {
-					payload,
+					payload: JSON.stringify(payload),
 				}
 			});
 
