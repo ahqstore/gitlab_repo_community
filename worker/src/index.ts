@@ -10,16 +10,48 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
+import { Octokit } from "@octokit/core";
+import { createAppAuth } from "@octokit/auth-app";
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		const data = await request.json();
+		const appId = env.GITHUB_APP_ID;
+		const privateKey = env.GITHUB_PRIVATE_KEY; // This is now your "persistent" base
+		const installationId = env.INSTALLATION_ID;
 
-		console.log(data);
-
-		// Always returns OK
-		return new Response("OK", {
-			status: 200
+		const github = new Octokit({
+			authStrategy: createAppAuth,
+			auth: {
+				appId,
+				privateKey,
+				installationId
+			}
 		});
+
+		try {
+			const payload = await request.text();
+
+			console.log(payload);
+
+			await github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
+				owner: 'ahqstore',
+				repo: 'gitlab_repo_community',
+				workflow_id: env.WORKFLOW_ID,
+				ref: 'main',
+				inputs: {
+					payload,
+				}
+			});
+
+			// Always returns OK
+			return new Response("OK", {
+				status: 200
+			});
+		} catch (e: unknown) {
+			console.error(e);
+			return new Response(`NOT OK: ${e}`, {
+				status: 500
+			});
+		}
 	},
 } satisfies ExportedHandler<Env>;

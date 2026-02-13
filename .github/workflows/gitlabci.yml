@@ -1,0 +1,24 @@
+name: Handle GitLab CI/CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        type: string
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+
+    name: Hello
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v6
+
+      - name: Log
+        run: |
+          echo "${{ github.event.inputs.gitlab-payload }}"
