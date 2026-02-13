@@ -13,6 +13,13 @@
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
+		const data = await request.json();
+
+		console.log(data);
+
+		// Always returns OK
+		return new Response("OK", {
+			status: 200
+		});
 	},
 } satisfies ExportedHandler<Env>;
