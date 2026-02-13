@@ -16,7 +16,7 @@ import { createAppAuth } from "@octokit/auth-app";
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		const appId = env.GITHUB_APP_ID;
-		const privateKey = env.GITHUB_PRIVATE_KEY; // This is now your "persistent" base
+		const privateKey = env.GITHUB_PRIVKEY; // This is now your "persistent" base
 		const installationId = env.INSTALLATION_ID;
 
 		const github = new Octokit({

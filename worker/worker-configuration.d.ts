@@ -9,10 +9,10 @@ declare namespace Cloudflare {
     }
 }
 interface Env extends Cloudflare.Env {
+    GITHUB_PRIVKEY: string;
     WORKFLOW_ID: string;
     INSTALLATION_ID: string;
     GITHUB_APP_ID: string;
-    GITHUB_PRIVATE_KEY: string;
 }
 
 // Begin runtime types
