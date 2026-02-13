@@ -5,6 +5,7 @@ on:
     inputs:
       payload:
         type: string
+        required: true
 
 jobs:
   init:
@@ -21,4 +22,4 @@ jobs:
 
       - name: Log
         run: |
-          echo "${{ github.event.inputs.gitlab-payload }}"
+          echo "${{ github.event.inputs.payload }}"
