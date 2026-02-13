@@ -19,19 +19,27 @@ export default {
 		const privateKey = env.GITHUB_PRIVKEY; // This is now your "persistent" base
 		const installationId = env.INSTALLATION_ID;
 
-		const github = new Octokit({
-			authStrategy: createAppAuth,
-			auth: {
-				appId,
-				privateKey,
-				installationId
-			}
+		const auth = createAppAuth({
+			appId,
+			privateKey,
+			installationId,
 		});
 
 		try {
 			const payload = await request.text();
 
 			console.log(payload);
+
+			const { token } = await auth({
+				type: "installation",
+				repositories: ["gitlab_repo_community"],
+				permissions: {
+					actions: "write",
+					contents: "read" // Often needed to 'see' the workflow file
+				},
+			});
+
+			const github = new Octokit({ auth: token });
 
 			await github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
 				owner: 'ahqstore',
